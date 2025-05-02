@@ -7,9 +7,9 @@ import errorHandler from "./src/middlewares/errorHandler.mid.js"
 import pathHandler from "./src/middlewares/pathHandler.mid.js"
 import router from "./src/routers/index.router.js"
 import dbConnect from "./src/helpers/dbConnect.helper.js"
-//import cookieParser from 'express'
-import session from "express-session"
-import MongoStore from "connect-mongo"
+import cookieParser from 'express'
+//import session from "express-session"
+//import MongoStore from "connect-mongo"
 
 // server settings //
 
@@ -29,8 +29,8 @@ server.set("views", __dirname + "/src/views")
 
 // middlewares settings //
 
-//server.use(cookieParser(process.env.SECRET))
-server.use(session({
+server.use(cookieParser(process.env.SECRET))
+//server.use(session({
     secret: process.env.SECRET,
     resave: true, 
     saveUninitialized:true,
@@ -38,7 +38,7 @@ server.use(session({
         mongoUrl:process.env.URL_MONGO,
         ttl: 7*24*60*60,
     })
-}))
+//}))
 server.use(urlencoded({ extended: true }))
 server.use(json())
 server.use(express.static("public"))
