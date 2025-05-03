@@ -30,14 +30,7 @@ server.set("views", __dirname + "/src/views")
 // middlewares settings //
 
 server.use(cookieParser(process.env.SECRET))
-//server.use(session({
-    secret: process.env.SECRET,
-    resave: true, 
-    saveUninitialized:true,
-    store: new MongoStore({
-        mongoUrl:process.env.URL_MONGO,
-        ttl: 7*24*60*60,
-    })
+//server.use(session({    secret: process.env.SECRET,    resave: true,     saveUninitialized:true,    store: new MongoStore({        mongoUrl:process.env.URL_MONGO,        ttl: 7*24*60*60})
 //}))
 server.use(urlencoded({ extended: true }))
 server.use(json())
