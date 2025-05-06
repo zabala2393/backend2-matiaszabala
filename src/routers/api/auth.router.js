@@ -1,6 +1,7 @@
 import { Router } from "express"
 import { usersManager } from "../../data/manager.mongo.js"
 import passport from "../../middlewares/passport.mid.js"
+import { verifyToken } from "../../helpers/token.util.js"
 
 const authRouter = Router()
 
@@ -26,12 +27,10 @@ const loginCb = async (req, res, next) => {
         const opts = { maxAge: 7 * 24 * 60 * 60 * 1000, signed: true }
         /* enviar respuesta al cliente */
         const data = { method, url, message }
-        const {user} = req
+        const { user } = req
         res
             .status(201)
-            .cookie("user_id", user._id, opts)
-            .cookie("role", usersRouter.role, opts)
-            .cookie("email", user.email, opts)
+            .cookie("token", user.token, opts)
             .json(data)
 
     } catch (error) {
@@ -44,12 +43,10 @@ const signoutCb = (req, res, next) => {
         const { method, originalUrl: url } = req
         const message = "signed out"
 
-        /* eliminar cookioe y enviar respuesta*/
+        /* eliminar cookie y enviar respuesta*/
         const data = { method, url, message }
         res.status(200)
-            .clearCookie("user_id")
-            .clearCookie("role")
-            .clearCookie("email")
+            .clearCookie("token")
             .json(data)
     } catch (error) {
         next(error)
@@ -62,10 +59,12 @@ const onlineCb = async (req, res, next) => {
 
         /* validar usuario conectado mediante cookies */
 
-        const { user_id, email, role } = req.signedCookies
+        const { token } = req.signedCookies
+
+        const dataToken = verifyToken(token)
 
         /* usuario existe */
-        let user = await usersManager.readBy({ user_id })
+        let user = await usersManager.readById(dataToken?._id)
 
         if (!user) {
             const error = new Error("invalid credentials")
@@ -73,7 +72,15 @@ const onlineCb = async (req, res, next) => {
             throw error
         }
 
-        const data = { method, url, user: { user_id, email, role, avatar: user.avatar } }
+        const { password, __v , createdAt, ...rest } = user
+    
+
+        const data = {
+
+            method,
+            url,
+            user: rest
+        }
         res.status(200).json(data)
 
     } catch (error) {
@@ -91,6 +98,10 @@ const badAuthCb = (req, res) => {
     }
 }
 
+const googleCb = (req, res) => {
+
+}
+
 const optsBadAuth = { session: false, failureRedirect: "/api/auth/bad-auth" }
 
 authRouter.post("/register", passport.authenticate("register", optsBadAuth), registerCb)
@@ -98,5 +109,7 @@ authRouter.post("/login", passport.authenticate("login", optsBadAuth), loginCb)
 authRouter.post("/signout", signoutCb)
 authRouter.get("/online", onlineCb)
 authRouter.get("/bad-auth", badAuthCb)
+authRouter.get("/google", passport.authenticate("gooogle", { scope: ["email", "profile"] }))
+authRouter.get("/google/redirect", passport.authenticate("google", optsBadAuth), loginCb)
 
 export default authRouter
