@@ -1,5 +1,7 @@
 import { Router } from "express"
 import { cartsManager } from "../../data/manager.mongo.js"
+//import passport from "../../middlewares/passport.mid.js"
+import passportCb from "../../middlewares/passportCb.mid.js"
 
 const cartsRouter = Router()
 
@@ -103,7 +105,8 @@ const destroyByID = async (req,res,next) => {
         next(error)
     } 
 }
-cartsRouter.post('/', createOne)
+
+cartsRouter.post('/',passportCb("user"), createOne)
 cartsRouter.get('/', readAll)
 cartsRouter.get("/:id", readById)
 cartsRouter.put("/:id", updateById)

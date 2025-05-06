@@ -1,5 +1,7 @@
 import { Router } from "express"
 import { usersManager } from "../../data/manager.mongo.js"
+//import passport from "../../middlewares/passport.mid.js"
+import passportCb from "../../middlewares/passportCb.mid.js"
 
 const usersRouter = Router()
 
@@ -40,11 +42,11 @@ const readAll = async (req, res, next) => {
     }
 }
 
-const readById = async (req,res,next) => {
+const readById = async (req, res, next) => {
     try {
         const id = req.query
         const one = await usersManager.readById(id)
-        if(one){
+        if (one) {
             res.status(201).json({
                 method: req.method,
                 url: req.originalUrl,
@@ -58,15 +60,15 @@ const readById = async (req,res,next) => {
         }
     } catch (error) {
         next(error)
-    } 
+    }
 }
 
-const updateById = async (req,res,next) => {
+const updateById = async (req, res, next) => {
     try {
         const id = req.query
         const data = req.body
         const one = await usersManager.findByIdAndUpdate(id, data)
-        if(one){
+        if (one) {
             res.status(201).json({
                 method: req.method,
                 url: req.originalUrl,
@@ -80,14 +82,14 @@ const updateById = async (req,res,next) => {
         }
     } catch (error) {
         next(error)
-    } 
+    }
 }
 
-const destroyByID = async (req,res,next) => {
+const destroyByID = async (req, res, next) => {
     try {
         const id = req.query
         const one = await usersManager.destroyByID(id)
-        if(one){
+        if (one) {
             res.status(201).json({
                 method: req.method,
                 url: req.originalUrl,
@@ -101,12 +103,13 @@ const destroyByID = async (req,res,next) => {
         }
     } catch (error) {
         next(error)
-    } 
+    }
 }
-usersRouter.post('/', createOne)
-usersRouter.get('/', readAll)
-usersRouter.get("/:id", readById)
-usersRouter.put("/:id", updateById)
-usersRouter.delete("/id", destroyByID)
+
+usersRouter.post('/',passportCb("admin"), createOne)
+usersRouter.get('/', passportCb("admin"), readAll)
+usersRouter.get("/:id", passportCb("admin"), readById)
+usersRouter.put("/:id", passportCb("user"), updateById)
+usersRouter.delete("/id",passportCb("user"),  destroyByID)
 
 export default usersRouter
