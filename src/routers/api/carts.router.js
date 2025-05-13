@@ -1,11 +1,24 @@
-import { Router } from "express"
+import Routerhelper from "../../helpers/router.helper.js"
 import { cartsManager } from "../../data/manager.mongo.js"
 //import passport from "../../middlewares/passport.mid.js"
 import passportCb from "../../middlewares/passportCb.mid.js"
 
-const cartsRouter = Router()
+class CartsRouter extends Routerhelper {
+    constructor() {
+        super()
+        this.init()
+    }
+    init = () => {
 
-const createOne = async (req, res, next) => {
+        this.create('/', passportCb("user"), createOne)
+        this.read('/', readAll)
+        this.read("/:id", readById)
+        this.update("/:id", updateById)
+        this.destroy("/id", destroyByID)
+    }
+}
+
+const createOne = async (req, res) => {
 
     try {
         const data = req.body
@@ -21,7 +34,7 @@ const createOne = async (req, res, next) => {
     }
 }
 
-const readAll = async (req, res, next) => {
+const readAll = async (req, res) => {
 
     try {
         const filter = req.query
@@ -42,11 +55,11 @@ const readAll = async (req, res, next) => {
     }
 }
 
-const readById = async (req,res,next) => {
+const readById = async (req, res) => {
     try {
         const id = req.query
         const one = await cartsManager.readById(id)
-        if(one){
+        if (one) {
             res.status(201).json({
                 method: req.method,
                 url: req.originalUrl,
@@ -60,15 +73,15 @@ const readById = async (req,res,next) => {
         }
     } catch (error) {
         next(error)
-    } 
+    }
 }
 
-const updateById = async (req,res,next) => {
+const updateById = async (req, res) => {
     try {
         const id = req.query
         const data = req.body
         const one = await cartsManager.findByIdAndUpdate(id, data)
-        if(one){
+        if (one) {
             res.status(201).json({
                 method: req.method,
                 url: req.originalUrl,
@@ -82,14 +95,14 @@ const updateById = async (req,res,next) => {
         }
     } catch (error) {
         next(error)
-    } 
+    }
 }
 
-const destroyByID = async (req,res,next) => {
+const destroyByID = async (req, res) => {
     try {
         const id = req.query
         const one = await cartsManager.destroyByID(id)
-        if(one){
+        if (one) {
             res.status(201).json({
                 method: req.method,
                 url: req.originalUrl,
@@ -103,13 +116,9 @@ const destroyByID = async (req,res,next) => {
         }
     } catch (error) {
         next(error)
-    } 
+    }
 }
 
-cartsRouter.post('/',passportCb("user"), createOne)
-cartsRouter.get('/', readAll)
-cartsRouter.get("/:id", readById)
-cartsRouter.put("/:id", updateById)
-cartsRouter.delete("/id", destroyByID)
 
+const cartsRouter = new CartsRouter().getRouter()
 export default cartsRouter

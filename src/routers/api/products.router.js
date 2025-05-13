@@ -1,117 +1,78 @@
-import { Router } from "express"
+import Routerhelper from "../../helpers/router.helper.js"
 import { productsManager } from "../../data/manager.mongo.js"
 //import passport from "../../middlewares/passport.mid.js"
 import passportCb from "../../middlewares/passportCb.mid.js"
 
-const productsRouter = Router()
+class ProductsRouter extends Routerhelper {
+    constructor() {
+        super()
+        this.init()
+    }
 
-const createOne = async (req, res, next) => {
-
-    try {
-        const data = req.body
-        const one = await productsManager.createOne(data)
-        res.status(201).json({
-            method: req.method,
-            url: req.originalUrl,
-            response: one,
-        })
-
-    } catch (error) {
-        next(error)
+    init = () => {
+        this.create('/', ["ADMIN"], createOne)
+        this.read('/', readAll)
+        this.read("/:id", readById)
+        this.update("/:id", ["ADMIN"], updateById)
+        this.destroy("/id", ["ADMIN"], destroyByID)
     }
 }
 
-const readAll = async (req, res, next) => {
+const createOne = async (req, res) => {
+    const data = req.body
+    const one = await productsManager.createOne(data)
+    res.json201(one._id)
+}
 
-    try {
-        const filter = req.query
-        const all = await productsManager.readAll(filter)
-        if (all.length > 0) {
-            res.status(201).json({
-                method: req.method,
-                url: req.originalUrl,
-                response: all,
-            })
-        } else {
-            const error = new Error('Not found')
-            error.statusCode = 404
-            throw error
-        }
-    } catch (error) {
-        next(error)
+const readAll = async (req, res) => {
+    const filter = req.query
+    const all = await productsManager.readAll(filter)
+    if (all.length > 0) {
+        res.json200(all)
+    } else {
+        res.json404()
     }
 }
 
-const readById = async (req,res,next) => {
-    try {
-        const id = req.query
-        const one = await productsManager.readById(id)
-        if(one){
-            res.status(201).json({
-                method: req.method,
-                url: req.originalUrl,
-                response: one,
-            })
+const readById = async (req, res) => {
 
-        } else {
-            const error = new Error("Not found")
-            error.statusCode = 404
-            throw error
-        }
-    } catch (error) {
-        next(error)
-    } 
+    const id = req.query
+    const one = await productsManager.readById(id)
+    if (one) {
+        res.json200(one._id)
+
+    } else {
+        res.json404()
+    }
+
 }
 
-const updateById = async (req,res,next) => {
-    try {
-        const id = req.query
-        const data = req.body
-        const one = await productsManager.findByIdAndUpdate(id, data)
-        if(one){
-            res.status(201).json({
-                method: req.method,
-                url: req.originalUrl,
-                response: one,
-            })
+const updateById = async (req, res) => {
 
-        } else {
-            const error = new Error("Not found")
-            error.statusCode = 404
-            throw error
-        }
-    } catch (error) {
-        next(error)
-    } 
+    const id = req.query
+    const data = req.body
+    const one = await productsManager.findByIdAndUpdate(id, data)
+    if (one) {
+        res.json201(one._id)
+
+    } else {
+        res.json404()
+    }
+
 }
 
-const destroyByID = async (req,res,next) => {
-    try {
-        const id = req.query
-        const one = await productsManager.destroyByID(id)
-        if(one){
-            res.status(201).json({
-                method: req.method,
-                url: req.originalUrl,
-                response: one,
-            })
+const destroyByID = async (req, res) => {
 
-        } else {
-            const error = new Error("Not found")
-            error.statusCode = 404
-            throw error
-        }
-    } catch (error) {
-        next(error)
-    } 
+    const id = req.query
+    const one = await productsManager.destroyByID(id)
+    if (one) {
+        res.json201(one._id)
+
+    } else {
+        res.json404()
+    }
+
 }
 
-
-
-productsRouter.post('/', passportCb("admin"), createOne)
-productsRouter.get('/', readAll)
-productsRouter.get("/:id", readById)
-productsRouter.put("/:id",passportCb("admin"), updateById)
-productsRouter.delete("/id",passportCb("admin"), destroyByID)
-
+const productsRouter = new ProductsRouter().getRouter()
 export default productsRouter

@@ -1,4 +1,4 @@
-import { Router } from "express"
+import Routerhelper from "../helpers/router.helper.js"
 import userRouter from "./api/user.router.js"
 import productsRouter from "./api/products.router.js"
 import cartsRouter from "./api/carts.router.js"
@@ -6,12 +6,20 @@ import cookiesRouter from "./api/cookies.router.js"
 import sessionsRouter from "./api/sessions.router.js"
 import authRouter from "./api/auth.router.js"
 
-const apiRouter = Router()
+class ApiRouter extends Routerhelper {
+   constructor () { 
+    super()
+    this.init}
 
-apiRouter.use("/users", userRouter)
-apiRouter.use("/products", productsRouter)
-apiRouter.use("/carts", cartsRouter)
-apiRouter.use("/cookies", cookiesRouter)
-apiRouter.use("/session", sessionsRouter)
-apiRouter.use("/auth", authRouter)
+    init = () => {
+        this.use("/users", userRouter)
+        this.use("/products", productsRouter)
+        this.use("/carts", cartsRouter)
+        this.use("/cookies", cookiesRouter)
+        this.use("/session", sessionsRouter)
+        this.use("/auth", authRouter)
+    }
+}
+
+const apiRouter = new ApiRouter().getRouter()
 export default apiRouter
