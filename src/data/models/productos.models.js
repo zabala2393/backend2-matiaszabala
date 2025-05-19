@@ -1,6 +1,6 @@
 import { Schema, Types, model } from "mongoose";
 
-const collection = "productos"
+const collection = "products"
 
 const schema = new Schema(
     {
@@ -31,13 +31,13 @@ const schema = new Schema(
             type: Boolean,
             default: false
         },
-        owner_id: { type: Types.ObjectId, ref: "usuarios", index: true }
+        owner_id: { type: Types.ObjectId, ref: "users", index: true }
     },
     { timestamps: true }
 )
 
 schema.pre(/^find/, function () {
-    this.populate("owner_id", "email avatar")
+    this.populate("owner_id", "email")
 })
 
 const Producto = model(collection, schema)

@@ -53,6 +53,4 @@ coookiesRouter.get("/create", createCb)
 coookiesRouter.get("/read", readCb)
 coookiesRouter.get("/clear", clearCB)
 
-
-
 export default coookiesRouter

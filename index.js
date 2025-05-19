@@ -1,15 +1,13 @@
 import "dotenv/config.js"
-import express, { json, urlencoded, static as static_} from "express"
+import express, { json, urlencoded } from "express"
 import { engine } from 'express-handlebars'
 import __dirname from "./utils.js"
 import morgan from "morgan"
+import cookieParser from 'cookie-parser'
+import router from "./src/routers/index.router.js"
 import errorHandler from "./src/middlewares/errorHandler.mid.js"
 import pathHandler from "./src/middlewares/pathHandler.mid.js"
-import router from "./src/routers/index.router.js"
 import dbConnect from "./src/helpers/dbConnect.helper.js"
-import cookieParser from 'express'
-//import session from "express-session"
-//import MongoStore from "connect-mongo"
 
 // server settings //
 
@@ -30,13 +28,10 @@ server.set("views", __dirname + "/src/views")
 // middlewares settings //
 
 server.use(cookieParser(process.env.SECRET))
-//server.use(session({    secret: process.env.SECRET,    resave: true,     saveUninitialized:true,    store: new MongoStore({        mongoUrl:process.env.URL_MONGO,        ttl: 7*24*60*60})
-//}))
 server.use(urlencoded({ extended: true }))
 server.use(json())
 server.use(express.static("public"))
 server.use(morgan("dev"))
-
 
 //router settings //
 

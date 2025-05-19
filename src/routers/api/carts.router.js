@@ -1,6 +1,5 @@
 import Routerhelper from "../../helpers/router.helper.js"
 import { cartsManager } from "../../data/manager.mongo.js"
-//import passport from "../../middlewares/passport.mid.js"
 import passportCb from "../../middlewares/passportCb.mid.js"
 
 class CartsRouter extends Routerhelper {
@@ -23,11 +22,7 @@ const createOne = async (req, res) => {
     try {
         const data = req.body
         const one = await cartsManager.createOne(data)
-        res.status(201).json({
-            method: req.method,
-            url: req.originalUrl,
-            response: one,
-        })
+        res.json201(one._id)
 
     } catch (error) {
         next(error)

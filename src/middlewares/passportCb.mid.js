@@ -5,7 +5,7 @@ const passportCb = (strategy) => (req, res, next) => {
         try {
             if(error) throw error
             if(!user) {
-                const error = new Error(info?.message || "Forbidden")
+                const error = new Error(info?.message || "Bad Auth")
                 error.statusCode = info?.statusCode || 401
                 throw error
             }

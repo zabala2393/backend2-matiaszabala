@@ -11,30 +11,13 @@ const callbackURL = "http://localhost:8080/api/auth/google/redirect"
 passport.use(
     "register",
     new LocalStrategy(
-        /* objeto de configuracion */
         { passReqToCallback: true, usernameField: "email" },
-        /* callback de la logica */
         async (req, email, password, done) => {
-            try {
-                const { city } = req.body
-                if (!city) {
-                    //const error = new Error("invalid data")
-                    //error.statusCode = 400
-                    //throw error
-                    return done(null, null, {message: "invalid data", statusCode:400})
-                }
-                /* validar si el usuario fue registrado */
+            try {                
                 let user = await usersManager.readBy({ email })
-                if (user) {
-                    //const error = new Error("invalid credentials")
-                    //error.statusCode = 401
-                    //throw error
-                    return done(null, null, {message: "invalid credentials", statusCode:401})
-                }
-                req.password = createHash(password)
-                /* registro del usuario (create) */
+                if (user) { return done(null, null, { message: "invalid credentials", statusCode: 401 }) }
+                req.body.password = createHash(password)
                 user = await usersManager.createOne(req.body)
-                /* done terrmina proceso y agrega los datos al req.user */
                 done(null, user)
             } catch (error) {
                 done(error)
@@ -45,34 +28,16 @@ passport.use(
 passport.use(
     "login",
     new LocalStrategy(
-        /* objeto de configuracion */
         { passReqToCallback: true, usernameField: "email" },
-        /* callback de la logica */
-        async (req, email, password, done) => {
-
+        async (req, email,password, done) => {
             try {
-
-                /* validar si el usuario fue registrado */
-
                 let user = await usersManager.readBy({ email })
-
-                if (!user) {
-                    //const error = new Error("invalid credentials")
-                    //error.statusCode = 401
-                    //throw error
-                    return done(null, null, {message: "invalid data", statusCode:401})
-                }
-
+                if (!user) { return done(null, null, { message: "invalid credentials", statusCode: 401 }) }
                 const verify = compareHash(password, user?.password)
-
-                if (!verify) {
-                    //const error = new Error("invalid credentials")
-                    //error.statusCode = 401
-                    //throw error
-                    return done(null, null, {message: "invalid data", statusCode:400})
-                }
+                console.log(verify)
+                if (!verify) { return done(null, null, { message: "invalid password", statusCode: 400 }) }
                 const data = {
-                    _id: user_id,
+                    _id: user._id,
                     role: user.role,
                     email
                 }
@@ -124,16 +89,11 @@ passport.use(
         async (data, done) => {
             try {
                 const { _id, role, email } = data
-                const user = await usersManager.readBy({_id, role, email})
+                const user = await usersManager.readBy({ _id, role, email })
                 if (!user) {
-                    //const error = new Error("Forbidden")
-                    //error.statusCode = 403
-                    //throw error
-                    return done(null, null, {message: "Forbidden", statusCode:403})
+                    return done(null, null, { message: "Forbidden", statusCode: 403 })
                 }
-
                 done(null, user)
-
             } catch (error) {
                 done(error)
             }
@@ -145,20 +105,15 @@ passport.use(
     "admin",
     new JwtStrategy(
         { secretOrKey: process.env.SECRET, jwtFromRequest: ExtractJwt.fromExtractors([req => req?.signedCookies?.token]) },
-        async(data,done) => {
+        async (data, done) => {
             try {
                 const { _id, role, email } = data
-                const user = await usersManager.readBy({_id, role, email})
-                if (!user && user?.role !== "ADMIN") {
-                    //const error = new Error("Forbidden")
-                    //error.statusCode = 403
-                    //throw error
-                    return done(null, null, {message: "forbidden", statusCode:403})
-                }
+                const user = await usersManager.readBy({ _id, role, email })
+                if (!user && user?.role !== "ADMIN") { return done(null, null, { message: "forbidden", statusCode: 403 }) }
             } catch (error) {
                 done(error)
             }
-         }
+        }
     )
 )
 export default passport

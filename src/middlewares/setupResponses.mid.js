@@ -11,7 +11,6 @@ const setupResponses = (req, res, next) => {
             404: "No ecnontrado",
             500: "error de servidor"
         }
-
         const successRes = (code, response, message = messages[code]) => res.status(code).json({ ...data, response, message })
         res.json200 = (response, message) => successRes(200, response, message)
         res.json201 = (response, message) => successRes(201, response, message)

@@ -1,16 +1,16 @@
 import { Schema, model, Types } from "mongoose";
 
-const collection = "carritos";
+const collection = "carts";
 const schema = new Schema(
     {
         product_id: {
             type: Types.ObjectId,
-            ref: "productos",
+            ref: "products",
             required: true
         },
         user_id: {
             type: Types.ObjectId,
-            ref: "usuarios",
+            ref: "users",
             required: true,
             index: true
         },
@@ -29,7 +29,7 @@ const schema = new Schema(
 );
 
 schema.pre(/^find/, function () {
-    this.populate("user_id", "email avatar").populate("product_id", "title price stock");
+    this.populate("user_id", "email").populate("product_id", "title price stock");
 });
 
 const Carrito = model(collection, schema);
