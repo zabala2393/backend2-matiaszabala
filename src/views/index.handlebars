@@ -1,6 +1,15 @@
-<h1>List of products</h1>
+<h1>Listado de productos</h1>
 <section>
+    <ul>
     {{#each products}}
-    
+    <li id="productItem">
+        Nombre: {{title}}
+        precio: {{price}}
+        Category: {{category}}
+        Stock: {{stock}}
+        On sale: {{onsale}}
+    </li>
+
     {{/each}}
+    </ul>
 </section>

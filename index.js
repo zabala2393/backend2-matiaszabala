@@ -8,8 +8,9 @@ import router from "./src/routers/index.router.js"
 import errorHandler from "./src/middlewares/errorHandler.mid.js"
 import pathHandler from "./src/middlewares/pathHandler.mid.js"
 import dbConnect from "./src/helpers/dbConnect.helper.js"
+import {Server} from "socket.io"
 
-// server settings //
+let io = undefined
 
 const server = express()
 const port = process.env.PORT || 8080
@@ -17,15 +18,12 @@ const ready = async () => {
     console.log(`Server ready on port ${port}`)
     await dbConnect(process.env.URL_MONGO)
 }
-server.listen(port, ready)
-
-// engine settings //
+const serverHttp = server.listen(port, ready)
+io = new Server(serverHttp)
 
 server.engine("handlebars", engine())
 server.set("view engine", "handlebars")
 server.set("views", __dirname + "/src/views")
-
-// middlewares settings //
 
 server.use(cookieParser(process.env.SECRET))
 server.use(urlencoded({ extended: true }))
@@ -33,8 +31,9 @@ server.use(json())
 server.use(express.static("public"))
 server.use(morgan("dev"))
 
-//router settings //
-
-server.use("/", router)
+server.use("/", (req,res,next)=>{
+    req.io=io,
+    next()
+} , router)
 server.use(errorHandler)
 server.use(pathHandler)

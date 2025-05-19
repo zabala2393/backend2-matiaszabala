@@ -19,7 +19,7 @@ const registerViewCb = async (req, res) => {
 
 const loginViewCb = async (req, res) => {
     const products = await productsManager.readAll()
-    res.status(200).render("login", { products })
+    return res.render("login", { products })
 }
 
 const profileViewCb = async (req, res) => {
