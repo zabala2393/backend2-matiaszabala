@@ -9,6 +9,10 @@ const register = async (req,res,next) =>
             password: document.querySelector("#password").value,        
         }
 
+        const checkPassword = {
+            passwordCheck: document.querySelector("#passwordCheck").value
+        }
+
         const opts = {
             method: "POST",
             headers: {"Content-Type": "application/json"},
@@ -17,7 +21,7 @@ const register = async (req,res,next) =>
         const url = "/api/auth/register"
         let response = await fetch(url, opts)
         response = await response.json()
-        if(response.error) {
+        if(response.error|| data.password !== checkPassword) {
             alert(response.error)
         } else {
             location.replace("/login")
