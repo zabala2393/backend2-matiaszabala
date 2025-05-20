@@ -11,9 +11,7 @@ const loginCb = async (req, res) => {
     res.cookie("token", req.user.token, opts).json200(req.user._id, message)
 }
 
-const signoutCb = (req, res) => {
-    const message = "Sesion cerrada"
-    res.clearCookie("token").json200(req.user._id, message)
+const signoutCb = (req, res) => {const message = "Sesion cerrada"; res.clearCookie("token").json200(req.user._id, message)
 }
 
 const onlineCb = async (req, res) => {

@@ -8,10 +8,8 @@ class IndexRouter extends RouterHelper {
             this.init()
     }
     init = () => {
-
         this.use("/api", apiRouter)
         this.use("/", viewsRouter)
-
     }
 }
 

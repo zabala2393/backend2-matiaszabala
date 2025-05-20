@@ -1,6 +1,5 @@
 import Routerhelper from "../../helpers/router.helper.js"
 import { productsManager } from "../../data/manager.mongo.js"
-import passportCb from "../../middlewares/passportCb.mid.js"
 
 const createOne = async (req, res) => {
     const data = req.body
@@ -55,7 +54,6 @@ const destroyByID = async (req, res) => {
     } else {
         res.json404()
     }
-
 }
 
 class ProductsRouter extends Routerhelper {

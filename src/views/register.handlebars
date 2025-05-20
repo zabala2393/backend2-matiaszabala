@@ -1,0 +1,25 @@
+<h1>Creacion de usuario</h1>
+
+<hr>
+
+<form title="registerForm">
+
+    <h3>Nombre</h3>
+    <input type="string" name="first_name" id="first_name" placeholder="Nombres" required>
+    <h3>Apellido</h3>
+    <input type="string" name="last_name" id="last_name" placeholder="Apellidos" required>
+    <h3>Edad</h3>
+    <input type="number" name="age" id="age" placeholder="Edad" required>
+    <h3>Usuario</h3>
+    <input type="string" name="email" id="email" placeholder="Direccion de correo electronico" required>
+    <h3>Contraseña</h3>
+    <input type="password" name="password" id="password" placeholder="Contraseña" required>
+    <h3>Confirmar contraseña</h3>
+    <input type="password" name="passwordCheck" id="passwordCheck" placeholder="Repetir contraseña" required>
+
+    <button type="button" id="register">Registrarse</button>
+
+</form>
+
+<script src="/socket.io/socket.io.js"></script>
+<script src="/scripts/register.js"></script>

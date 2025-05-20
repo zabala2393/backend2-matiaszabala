@@ -12,12 +12,12 @@ const schema = new Schema(
         description: { type: String },
         category: {
             type: String,
-            default: "Laptops", 
-            enum: ["Tablets", "Smartphones", "Laptops", "Smartwatches", "Headphones"]
+            default: "Varios", 
+            enum: ["Accesorios", "Discos", "Mancuernas", "Ropa", "Varios"]
         },
         image: {
             type: String,
-            default: "https://www.shutterstock.com/image-vector/missing-picture-page-website-design-600nw-1552421075.jpg"
+            default: "https://s3.amazonaws.com/roypi.com/static/images/default_product.png"
         },
         price: {
             type: Number,

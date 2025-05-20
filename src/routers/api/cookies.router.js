@@ -1,21 +1,15 @@
-import { Router } from "express"
-
-const coookiesRouter = Router()
+import Routerhelper from "../../helpers/router.helper.js"
 
 const createCb = (req, res, next) => {
-    try {        
-        const { method, originalUrl: url } = req
+    try {   
         const message = "Cookie creada"
-        const data = { method, url, message }
         res
-            .status(201)
             .cookie("user_id", "123456abcdef", { maxAge: 7 * 24 * 60 * 60 * 1000 })
             .cookie("role", "admin", {
                 maxAge: 7 * 24 * 60 * 60 * 1000,
                 signed: true,
             })
-            .json(data)
-
+            .json201(message)
     } catch (error) {
         next(error)
     }
@@ -23,11 +17,9 @@ const createCb = (req, res, next) => {
 
 const readCb = (req, res, next) => {
     try {
-        const { method, originalUrl: url } = req
         const message = "Cookie leida"
         const cookies = { common: req.cookies, signed: req.signedCookies }
-        const data = { method, url, message, cookies }
-        res.status(200).json(data)
+        res.json200(message,cookies)
     } catch (error) {
         next(error)
     }
@@ -35,22 +27,28 @@ const readCb = (req, res, next) => {
 
 const clearCB = (req,res,next) => {
     try {
-        const { method, originalUrl: url } = req
         const message = "Cookie limpiada"
-        const data = { method, url, message }
-        res.status(200)
+        res
         .clearCookie("user_id")
         .clearCookie("role")
-        .json(data)
-
+        .json200(null, message)
     } catch (error) {
         next(error)
     }
 }
 
-/* cookie comun*/
-coookiesRouter.get("/create", createCb)
-coookiesRouter.get("/read", readCb)
-coookiesRouter.get("/clear", clearCB)
+class CookiesRouter extends Routerhelper {
+    constructor() {
+        super()
+        this.init()
+    }
 
+    init = () => {
+        this.create('/create', ["USER","ADMIN"], createCb)
+        this.read('/read',["USER", "ADMIN"], readCb)
+        this.destroy("/clear", ["USER","ADMIN"], clearCB)
+    }
+}
+
+const coookiesRouter = new CookiesRouter().getRouter()
 export default coookiesRouter
