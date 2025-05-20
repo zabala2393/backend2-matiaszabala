@@ -1,18 +1,23 @@
+<main class="d-flex flex-column align-items-center w-100 flex-grow-1">
 <h1>Listado de productos</h1>
-<section>
-    <ul>
+<section class="d-flex flex-wrap justify-content-evenly">
+
     {{#each products}}
-    <li id="productItem">
+
+    <div id="productItem">
+        <img src={{image}} alt="">
         Nombre: {{title}}
         precio: {{price}}
         Category: {{category}}
         Stock: {{stock}}
         On sale: {{onsale}}
-    </li>
+    </div>
+
 
     {{/each}}
-    </ul>
+
 </section>
 
+</main>
+
 <script src="/socket.io/socket.io.js"></script>
-<script src="/scripts/navbar"></script>

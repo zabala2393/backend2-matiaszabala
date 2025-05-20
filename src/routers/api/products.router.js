@@ -3,6 +3,13 @@ import { productsManager } from "../../data/manager.mongo.js"
 
 const createOne = async (req, res) => {
     const data = req.body
+
+    const title = data.title
+
+    const exists = await productsManager.readBy({title})
+    if (exists) {
+        res.json400(`Ya existe un producto con el nombre ${title}`)
+    }
     const one = await productsManager.createOne(data)
     res.json201(one._id)
 }
@@ -32,11 +39,12 @@ const readById = async (req, res) => {
 
 const updateById = async (req, res) => {
 
-    const id = req.params
+    const {id} = req.params
     const data = req.body
     const one = await productsManager.findByIdAndUpdate(id, data)
     if (one) {
-        res.json201(one)
+        const message = "Producto actualizado"
+        res.json201(one, message)
 
     } else {
         res.json404()
@@ -46,10 +54,11 @@ const updateById = async (req, res) => {
 
 const destroyByID = async (req, res) => {
 
-    const id = req.params
+    const {id} = req.params
     const one = await productsManager.destroyByID(id)
     if (one) {
-        res.json201(one._id)
+        const message = "Producto eliminado"
+        res.json201(one._id, message)
 
     } else {
         res.json404()

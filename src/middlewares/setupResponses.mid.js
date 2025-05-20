@@ -7,9 +7,9 @@ const setupResponses = (req, res, next) => {
             201: "Creado",
             400: "Error de cliente",
             401: "Fallo de autenticacion",
-            403: " acceso prohibido",
-            404: "No ecnontrado",
-            500: "error de servidor"
+            403: "Acceso prohibido",
+            404: "No encontrado",
+            500: "Error de servidor"
         }
         const successRes = (code, response, message = messages[code]) => res.status(code).json({ ...data, response, message })
         res.json200 = (response, message) => successRes(200, response, message)
