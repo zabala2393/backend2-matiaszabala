@@ -11,7 +11,7 @@ class ManagerMongo {
     readBy = async(data) =>await this.model.findOne(data).lean()
     readById = async(id) =>await this.model.findById(id).lean()
     updateById = async(id) => await this.model.findByIdAndUpdate(id, data)
-    destroyByID = async(id) => await this.model.findByIdAndDelete(id)
+    destroyById = async(id) => await this.model.findByIdAndDelete(id)
 }
 
 const usersManager = new ManagerMongo(Usuario)

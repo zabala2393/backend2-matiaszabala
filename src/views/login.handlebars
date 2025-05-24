@@ -1,19 +1,20 @@
-<h2>Bienvenido a Sportienda</h2>
+<main>
+    <h2>Bienvenido a Sportienda</h2>
 
-<hr>
+    <hr>
 
-<h1>Ingrese sus credenciales</h1>
+    <h1>Ingrese sus credenciales</h1>
 
-<form action="/api/auth/login" method="post">
+    <form action="/api/auth/login" method="post">
 
-    <input type="string" name="email" id="email" placeholder="Correo electronico" required>
-    <input type="password" name="password" id="password" placeholder="Contraseña" required>
+        <input type="string" name="email" id="email" placeholder="Correo electronico" required>
+        <input type="password" name="password" id="password" placeholder="Contraseña" required>
 
-    <button type="button" name="login" id="login">Iniciar sesion</button>
+        <button type="button" name="login" id="login">Iniciar sesion</button>
 
-</form>
+    </form>
 
-<footer>Nintendo/Todos los derechos reservados</footer>
-
+    <footer>Todos los derechos reservados</footer>
+</main>
 <script src="/socket.io/socket.io.js"></script>
 <script src="/scripts/login.js"></script>

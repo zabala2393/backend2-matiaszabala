@@ -29,7 +29,7 @@ class Routerhelper {
             }
         })
 
-    create = (path, policies, ...cbs) => this.router.post(path,setupPolicies(policies),this.applyCallbacks(cbs))
+    create = (path, policies, ...cbs) => this.router.post(path, setupPolicies(policies), this.applyCallbacks(cbs))
     read = (path, policies, ...cbs) => this.router.get(path, setupPolicies(policies), this.applyCallbacks(cbs))
     render = (path, policies, ...cbs) => this.router.render(path, setupPolicies(policies), this.applyCallbacksToRender(cbs))
     update = (path, policies, ...cbs) => this.router.put(path, setupPolicies(policies), this.applyCallbacks(cbs))

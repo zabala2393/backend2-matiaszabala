@@ -12,8 +12,8 @@ const setupPolicies = (policies) => async (req, res, next) => {
             USER: policies.includes("USER"),
             ADMIN: policies.includes("ADMIN"),
         }
-        const verifyRole = roles[role]      
-        if (role in roles !==true) return res.json403()
+        const verifyRole = roles[role]    
+        if (!verifyRole) return res.json403()
         const user = await usersManager.readById(_id)
         const { password, __v, createdAt, ...rest } = user
         req.user = rest
