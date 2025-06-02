@@ -1,5 +1,5 @@
 import Routerhelper from "../helpers/router.helper.js"
-import { productsManager } from "../data/manager.mongo.js"
+import { productsManager } from "../dao/factory.js"
 
 const homeViewCb = async (req, res) => {
     const products = await productsManager.readAll()

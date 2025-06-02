@@ -33,7 +33,7 @@ class UsersController {
             const {id} = req.query
             const one = await this.service.readById(id)
             if (one) {
-                res.json201(one._id)
+                res.json201(one)
 
             } else {
                 res.json404()
@@ -48,8 +48,7 @@ class UsersController {
             const data = req.body
             const one = await this.service.findByIdAndUpdate(id, data)
             if (one) {
-                res.json201(one._id)
-
+                res.json201(one)
             } else {
                 res.json404()
             }
@@ -63,7 +62,6 @@ class UsersController {
             const one = await this.service.destroyById(id)
             if (one) {
                 res.json201(one._id)
-
             } else {
                 res.json404()
             }
