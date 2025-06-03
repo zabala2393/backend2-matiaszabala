@@ -7,6 +7,7 @@ class UsersServices {
 
     createOne= async(data) => await this.repository.createOne(data)
     readAll = async (filter) => await this.repository.readAll(filter)
+    readBy = async(filter) => await this.repository.readBy(filter)
     readById = async() => await this.repository.readById(id)
     updateById = async(id, data) => await this.repository.findByIdAndUpdate(id, data)
     destroyById = async(id)=> await this.repository.destroyById(id)

@@ -10,6 +10,8 @@ const schema = new Schema(
     password: { type: String, required: true }, 
     cart: { type: Types.ObjectId, ref: "carts", index: true },
     role: { type: String, default: "USER", enum: ["USER", "ADMIN", "PREM"], required: true, index: true },
+    isVerified: {type: Boolean, default: false},
+    verifyCode: {type:String},
   },
   { timestamps: true }
 );

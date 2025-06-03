@@ -13,6 +13,8 @@ class UsersDTO {
         this.password = createHash(data.pasword)
         this.role = data.role || "USER"
         this.cart = data.cart
+        this.isVerified = data.isVerified || false
+        this.verifyCode = data.verifyCode || crypto.randomBytes(12).toString("hex")
         if (PERSISTENCE!=="mongo") {
             this.createdAt = new Date()
             this.updatedAt = new Date()

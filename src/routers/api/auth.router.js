@@ -18,6 +18,7 @@ class Authrouter extends Routerhelper {
         this.read("/forbidden",["PUBLIC"], authController.forbiddenCb)
         this.read("/google",["PUBLIC"], passportCb("google", { scope: ["email", "profile"] }))
         this.read("/google/redirect",["PUBLIC"], passportCb("google"), authController.loginCb)
+        this.read("/verify/:email/:verifyCode", ["PUBLIC"], authController.verifyCb)
     }
 }
 

@@ -3,7 +3,7 @@ import { verifyToken } from "../helpers/token.util.js";
 
 class AuthController {
 
-    constructor(){
+    constructor() {
         this.service = usersService
     }
     registerCb = async (req, res) => { const message = "Registrado"; res.json201(null, message) }
@@ -38,6 +38,16 @@ class AuthController {
 
     forbiddenCb = (req, res) => {
         res.json403()
+    }
+
+    verifyCb = async(req, res) => {
+        const { email, verifyCode } = req.params
+        const user = this.service.readBy({ email, verifyCode })
+        if (!user) {
+            res.json404()
+        }
+        await this.service.updateById(user._id, { isVerified: true })
+        res.json200({ isVerified: true })
     }
 }
 

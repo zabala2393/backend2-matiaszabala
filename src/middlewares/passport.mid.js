@@ -5,6 +5,7 @@ import { ExtractJwt, Strategy as JwtStrategy } from "passport-jwt";
 import { compareHash } from "../helpers/hash.util.js";
 import usersRepository  from "../repositories/users.repository.js"
 import { createToken } from "../helpers/token.util.js";
+import verifyUserEmail from "../helpers/verifyUser.helper.js";
 
 const callbackURL = "http://localhost:8080/api/auth/google/redirect"
 
@@ -17,6 +18,7 @@ passport.use(
                 let user = await usersRepository.readAll({ email })
                 if (user) { return done(null, null, { message: "invalid credentials", statusCode: 401 }) }
                 user = await usersRepository.createOne(req.body)
+                await verifyUserEmail(user.email, user.verifyCode)
                 done(null, user)
             } catch (error) {
                 done(error)
