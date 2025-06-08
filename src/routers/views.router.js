@@ -26,6 +26,10 @@ const verifyViewCb = async (req, res) => {
     const { email } = req.params
     res.status(200).render("verify", { email })
 }
+
+const recoveryCb = async (req,res) => {
+    res.status(200).render("passwordrecovery")
+}
 class ViewsRouter extends Routerhelper {
     constructor() {
         super()
@@ -39,6 +43,7 @@ class ViewsRouter extends Routerhelper {
         this.read("/profile", ["USER", "ADMIN"], profileViewCb)
         this.read("/product/:pid", ["USER", "ADMIN"], productViewCb)
         this.render("/verify/:email", ["PUBLIC"], verifyViewCb)
+        this.render("/passwordrecovery", ["PUBLIC"], recoveryCb)
     }
 }
 const viewsRouter = new ViewsRouter().getRouter()

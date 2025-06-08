@@ -1,5 +1,6 @@
 import usersService from "../services/users.services.js";
 import { verifyToken } from "../helpers/token.util.js";
+import crypto from "crypto"
 
 class AuthController {
 
@@ -40,14 +41,36 @@ class AuthController {
         res.json403()
     }
 
-    verifyCb = async(req, res) => {
+    verifyCb = async (req, res) => {
         const { email, verifyCode } = req.params
-        const user = this.service.readBy({ email, verifyCode })
+        const user = await this.service.readBy({ email, verifyCode })
+        console.log(user)
         if (!user) {
             res.json404()
         }
-        await this.service.updateById(user._id, { isVerified: true })
+
+        await this.service.updateById(user._id, { isVerified: true})
         res.json200({ isVerified: true })
+    }
+
+    resetPasswordCb = async (req, res) => {
+        const { email } = req.body
+        const user = await this.service.readBy({ email })
+        if (!user) {
+            res.json404({ message: "Este correo electronico no esta registrado, intente de nuevo" })
+        }
+        res.json200()
+    }
+
+    newPasswordCb = async (req, res) => {
+        const { email } = req.params
+        const { password } = req.body
+        const user = await this.service.readBy({ email })
+        if (!user) {
+            res.json404()
+        }
+        await this.service.updateById(user._id, { password: password })
+        res.json200({ password: password })
     }
 }
 

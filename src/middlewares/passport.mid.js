@@ -2,8 +2,8 @@ import passport from "passport";
 import { Strategy as LocalStrategy } from "passport-local";
 import { Strategy as GoogleStrategy } from "passport-google-oauth2";
 import { ExtractJwt, Strategy as JwtStrategy } from "passport-jwt";
-import { compareHash } from "../helpers/hash.util.js";
-import usersRepository  from "../repositories/users.repository.js"
+import { createHash, compareHash } from "../helpers/hash.util.js";
+import usersRepository from "../repositories/users.repository.js"
 import { createToken } from "../helpers/token.util.js";
 import verifyUserEmail from "../helpers/verifyUser.helper.js";
 
@@ -14,8 +14,8 @@ passport.use(
     new LocalStrategy(
         { passReqToCallback: true, usernameField: "email" },
         async (req, email, password, done) => {
-            try {                
-                let user = await usersRepository.readAll({ email })
+            try {
+                let user = await usersRepository.readBy({ email })
                 if (user) { return done(null, null, { message: "invalid credentials", statusCode: 401 }) }
                 user = await usersRepository.createOne(req.body)
                 await verifyUserEmail(user.email, user.verifyCode)
@@ -30,17 +30,25 @@ passport.use(
     "login",
     new LocalStrategy(
         { passReqToCallback: true, usernameField: "email" },
-        async (req, email,password, done) => {
+        async (req, email, password, done) => {
             try {
-                let user = await usersRepository.readAll({ email })
+                let user = await usersRepository.readBy({ email })
                 if (!user) { return done(null, null, { message: "invalid credentials", statusCode: 401 }) }
                 const verify = compareHash(password, user?.password)
-                console.log(verify)
                 if (!verify) { return done(null, null, { message: "invalid password", statusCode: 400 }) }
                 const data = {
                     _id: user._id,
                     role: user.role,
                     email
+                }
+
+                const verifyAccount = user.isVerified
+                console.log(verifyAccount)
+                if (!verifyAccount) {
+                    return done(null, null, {
+                        message: "Por favor, verifique su cuenta",
+                        statusCode: 400
+                    })
                 }
                 const token = createToken(data)
                 user.token = token
@@ -54,17 +62,26 @@ passport.use(
 passport.use(
     "google",
     new GoogleStrategy(
-        { clientID: process.env.GOOGLE_ID, clientSecret: process.env.GOOGLE_SECRET, callbackURL },
+        {
+            clientID: process.env.GOOGLE_ID,
+            clientSecret: process.env.GOOGLE_SECRET,
+            callbackURL,
+            scope: ['profile', 'email']
+        },
         async (accesToken, refreshToken, profile, done) => {
             try {
-                let user = await usersRepository.readAll({ email: id })
+
+                const userEmail = profile.emails[0].value
+                const userGoogleId = profile.id
+
+                let user = await usersRepository.readBy({ email: userEmail })
                 if (!user) {
                     user = {
                         email: id,
-                        name: name.givenName,
-                        avatar: picture,
+                        first_name: first_name.givenName,
+                        last_name: last_name.givenName,
                         password: createHash(email),
-                        city: "Google"
+                        googleId: userGoogleId
                     }
                     user = await usersRepository.createOne(user)
                 }

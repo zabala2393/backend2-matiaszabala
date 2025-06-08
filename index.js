@@ -24,6 +24,11 @@ const ready = async () => {
 }
 const serverHttp = server.listen(port, ready)
 io = new Server(serverHttp)
+server.use(cors({
+    credentials: true,
+    origin: `http:/localhost:${process.env.PORT}`,
+    optionsSuccessStatus:200
+}))
 
 server.engine("handlebars", engine())
 server.set("view engine", "handlebars")
@@ -36,9 +41,7 @@ server.use(json())
 server.use(express.static("public"))
 server.use(morgan("dev"))
 
-server.get("/mail", async(req,res)=>{
-
-    
+server.get("/mail", async(req,res)=>{ 
 
 
 })
@@ -58,9 +61,5 @@ server.use("/", (req, res, next) => {
     req.io = io,
         next()
 }, router)
-server.use(cors({
-    credentials: true,
-    origin: `http:/localhost:${process.env.PORT}`
-}))
 server.use(errorHandler)
 server.use(pathHandler)

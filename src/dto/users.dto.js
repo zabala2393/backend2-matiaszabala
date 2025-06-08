@@ -1,4 +1,5 @@
-import crypto, { createHash } from "crypto"
+import { createHash } from "../helpers/hash.util.js"
+import crypto from "crypto"
 const {PERSISTENCE} = process.env
 
 class UsersDTO {
@@ -10,9 +11,9 @@ class UsersDTO {
         this.age = data.age
         this.last_name = data.last_name
         this.email = data.email
-        this.password = createHash(data.pasword)
+        this.password = createHash(data.password)
         this.role = data.role || "USER"
-        this.cart = data.cart
+        this.cart = data.cart 
         this.isVerified = data.isVerified || false
         this.verifyCode = data.verifyCode || crypto.randomBytes(12).toString("hex")
         if (PERSISTENCE!=="mongo") {

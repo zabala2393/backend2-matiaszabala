@@ -1,6 +1,7 @@
 import passportCb from "../../middlewares/passportCb.mid.js"
 import Routerhelper from "../../helpers/router.helper.js"
 import authController from "../../controllers/auth.controller.js"
+import resetPassword from "../../helpers/resetPassword.helper.js"
 
 class Authrouter extends Routerhelper {
     constructor() {
@@ -19,6 +20,8 @@ class Authrouter extends Routerhelper {
         this.read("/google",["PUBLIC"], passportCb("google", { scope: ["email", "profile"] }))
         this.read("/google/redirect",["PUBLIC"], passportCb("google"), authController.loginCb)
         this.read("/verify/:email/:verifyCode", ["PUBLIC"], authController.verifyCb)
+        this.read("/resetpassword", ["PUBLIC"], authController.resetPasswordCb, resetPassword)
+        this.read("/resetPassword/:email", ["PUBLIC"], authController.newPasswordCb)
     }
 }
 
