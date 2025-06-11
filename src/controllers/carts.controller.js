@@ -1,3 +1,4 @@
+import { isValidObjectId } from "mongoose"
 import cartsService from "../services/carts.services.js"
 
 class CartsController {
@@ -6,19 +7,25 @@ class CartsController {
         this.service = cartsService
     }
 
-    createOne = async (req, res) => {
+    createOne = async (req, res, next) => {
 
         try {
-            const data = req.body
-            const one = await this.service.createOne(data)
-            res.json201(one._id)
+            const { product_id, user_id } = req.body
+            if (!product_id || !user_id) {
+                res.json400("Usted no esta conectado o no hay ningun producto")
+            }
+            if (!isValidObjectId(product_id) || !isValidObjectId(user_id)) {
+                res.json400("ID no valido")
+            }
 
+            const one = await this.service.createOne({product_id,user_id})
+            res.json201(one._id)
         } catch (error) {
             next(error)
         }
     }
 
-    readAll = async (req, res) => {
+    readAll = async (req, res, next) => {
 
         try {
             const filter = req.query
@@ -26,7 +33,7 @@ class CartsController {
             if (all.length > 0) {
                 res.json201(all)
             } else {
-                res.json404()
+                res.json404("No hay ninguno carrito creado")
             }
         } catch (error) {
             next(error)
@@ -35,7 +42,7 @@ class CartsController {
 
     readById = async (req, res) => {
         try {
-            const {id} = req.query
+            const { id } = req.query
             const one = await this.service.readById(id)
             if (one) {
                 res.json201(one)
@@ -49,9 +56,9 @@ class CartsController {
 
     updateById = async (req, res) => {
         try {
-            const {id} = req.query
+            const { id } = req.query
             const data = req.body
-            const one = await this.service.findByIdAndUpdate(id, data)
+            const one = await this.service.updateById(id, data)
             if (one) {
                 res.json201(one)
 
@@ -65,7 +72,7 @@ class CartsController {
 
     destroyById = async (req, res) => {
         try {
-            const {id} = req.query
+            const { id } = req.query
             const one = await this.service.destroyById(id)
             if (one) {
                 res.json201(one)

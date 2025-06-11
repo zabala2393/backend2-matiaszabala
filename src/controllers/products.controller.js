@@ -9,16 +9,17 @@ class ProductsController {
     createOne = async (req, res) => {
         const data = req.body
         const title = data.title
-        const exists = await productsService.readAll({ title })
-        if (exists) {
+        const exists = await this.service.readAll({title})
+        console.log(exists)
+        if (exists.length>0) {
             res.json400(`Ya existe un producto con el nombre ${title}`)
         }
-        const one = await productsService.createOne()
+        const one = await this.service.createOne(data)
         res.json201(one)
     }
     readAll = async (req, res) => {
         const filter = req.query
-        const all = await productsService.readAll(filter)
+        const all = await this.service.readAll(filter)
         if (all.length > 0) {
             res.json200(all)
         } else {
@@ -28,7 +29,7 @@ class ProductsController {
     readById = async (req, res) => {
 
         const {id} = req.params
-        const one = await productsService.readById(id)
+        const one = await this.service.readById(id)
         if (one) {
             res.json200(one)
         } else {
@@ -38,7 +39,7 @@ class ProductsController {
     updateById = async (req, res) => {
         const { id } = req.params
         const data = req.body
-        const one = await productsService.updateById(id,data)
+        const one = await this.service.updateById(id,data)
         if (one) {
             const message = "Producto actualizado"
             res.json201(one, message)
@@ -50,7 +51,7 @@ class ProductsController {
     destroyByID = async (req, res) => {
 
         const { id } = req.params
-        const one = await productsService.destroyById(id)
+        const one = await this.service.destroyById(id)
         if (one) {
             const message = "Producto eliminado"
             res.json201(one._id, message)

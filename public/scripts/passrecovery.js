@@ -1,11 +1,22 @@
-const passRecovery = async (event) => {
+const passRecovery = async (event, next) => {
 
     event.preventDefault()
 
     try {
-        const email = document.querySelector("#email").value
+
+        const data = {
+            email: document.querySelector("#email").value
+        }
+
         const url = "/api/auth/resetpassword"
-        let response = await fetch(url)
+        
+        const opts = {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify(data)
+        }
+
+        let response = await fetch(url,opts)
         response = await response.json()
         if (response.error) {
             alert(response.error)

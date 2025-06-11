@@ -1,15 +1,16 @@
-import { cartsManager } from "../dao/mongo/dao.mongo.js";
+import cartsRepository from "../repositories/carts.repository.js";
 
 class CartsService {
     constructor() {
-        this.manager = cartsManager
+        this.repository = cartsRepository
     }
 
-    createOne= async(data) => await cartsManager.createOne(data)
-    readAll = async (filter) => await cartsManager.readAll(filter)
-    readById = async() => await cartsManager.readById(id)
-    updateById = async(id, data) => await cartsManager.findByIdAndUpdate(id, data)
-    destroyById = async(id)=> await cartsManager.destroyById(id)
+    createOne = async (data) => await cartsRepository.createOne(data)
+    readAll = async (filter) => await cartsRepository.readAll(filter)
+    readById = async () => await cartsRepository.readById(id)
+    readBy = async (filter) => await cartsRepository.readBy(filter)
+    updateById = async (id, data) => await cartsRepository.findByIdAndUpdate(id, data)
+    destroyById = async (id) => await cartsRepository.destroyById(id)
 }
 
 const cartsService = new CartsService()

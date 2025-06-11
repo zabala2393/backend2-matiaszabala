@@ -1,6 +1,6 @@
 import usersService from "../services/users.services.js";
 import { verifyToken } from "../helpers/token.util.js";
-import crypto from "crypto"
+import resetPassword from "../helpers/resetPassword.helper.js";
 
 class AuthController {
 
@@ -59,6 +59,9 @@ class AuthController {
         if (!user) {
             res.json404({ message: "Este correo electronico no esta registrado, intente de nuevo" })
         }
+
+        resetPassword
+
         res.json200()
     }
 
