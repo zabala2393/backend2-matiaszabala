@@ -27,12 +27,12 @@ const verifyViewCb = async (req, res) => {
     res.status(200).render("verify", { emailCrypto })
 }
 
-const recoveryCb = async (req,res) => {
+const recoveryCb = async (req, res) => {
     res.status(200).render("passwordrecovery")
 }
 
-const newPasswordCb = async (req,res) => {
-    res.status(200).render("")
+const newPasswordCb = async (req, res) => {
+    res.status(200).render("newpassword")
 }
 class ViewsRouter extends Routerhelper {
     constructor() {

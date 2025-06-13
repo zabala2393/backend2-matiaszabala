@@ -1,13 +1,17 @@
 import usersService from "../services/users.services.js";
 import { verifyToken } from "../helpers/token.util.js";
 import resetPassword from "../helpers/resetPassword.helper.js";
+import { createHash } from "../helpers/hash.util.js";
 
 class AuthController {
 
     constructor() {
         this.service = usersService
     }
-    registerCb = async (req, res) => { const message = "Registrado"; res.json201(null, message) }
+    registerCb = async (req, res) => {
+        const message = "Registrado"
+        res.json201(null, message)
+    }
 
     loginCb = async (req, res) => {
         const message = "Conectado"
@@ -49,7 +53,7 @@ class AuthController {
             res.json404()
         }
 
-        await this.service.updateById(user._id, { isVerified: true})
+        await this.service.updateById(user._id, { isVerified: true })
         res.json200({ isVerified: true })
     }
 
@@ -59,21 +63,33 @@ class AuthController {
         if (!user) {
             res.json404({ message: "Este correo electronico no esta registrado, intente de nuevo" })
         }
-
-        resetPassword
-
-        res.json200()
+        await resetPassword(email)
+        const opts = { maxAge: 60 * 60 * 1000, signed: true }
+        res
+        .cookie("token", req.user.token, opts).json200(req.user._id, message)
+        .json200()
     }
 
     newPasswordCb = async (req, res) => {
-        const { email } = req.params
-        const { password } = req.body
-        const user = await this.service.readBy({ email })
+
+        const { password } = req.body        
+        const { token } = req.signedCookies
+        console.log(token)
+        const dataToken = verifyToken(token)
+
+        let user = await this.service.readById(dataToken?._id)
         if (!user) {
             res.json404()
         }
-        await this.service.updateById(user._id, { password: password })
-        res.json200({ password: password })
+
+        if (user.password === password) {
+            res.json401("La contraseña ingresa no es valida. Ingrese una nueva")
+        }
+
+        const newHash = createHash(password)
+
+        await this.service.updateById(user._id, { password: newHash })
+        res.json200({ password: newHash })
     }
 }
 
