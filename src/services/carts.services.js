@@ -7,7 +7,7 @@ class CartsService {
 
     createOne = async (data) => await cartsRepository.createOne(data)
     readAll = async (filter) => await cartsRepository.readAll(filter)
-    readById = async () => await cartsRepository.readById(id)
+    readById = async (id) => await cartsRepository.readById(id)
     readBy = async (filter) => await cartsRepository.readBy(filter)
     updateById = async (id, data) => await cartsRepository.findByIdAndUpdate(id, data)
     destroyById = async (id) => await cartsRepository.destroyById(id)

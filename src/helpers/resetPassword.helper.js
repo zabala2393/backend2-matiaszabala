@@ -13,11 +13,12 @@ const resetPassword = async (email) => {
         await transport.sendMail({
             from: process.env.GOOGLE_EMAIL,
             to: email,
-            subject: "Restablezca su cuenta en Sportienda",
+            subject: "Restablezca su contraseña en Sportienda",
             html: `
         <section>
         <h1>Solicitud para reestablecer contraseña</h1>
-        <a href="${process.env.URL}/resetpassword/${emailCrypto}"> Verificar </a>
+        <h2>Ingrese al siguiente vinculo para renovar su contraseña de cuenta Sportienda</h2>
+        <a href="${process.env.URL}/resetpassword/${emailCrypto}"> Actualizar contraseña </a>
         </section>
         `    })
 

@@ -18,7 +18,7 @@ class CartsController {
                 res.json400("ID no valido")
             }
 
-            const one = await this.service.createOne({product_id,user_id})
+            const one = await this.service.createOne({ product_id, user_id })
             res.json201(one._id)
         } catch (error) {
             next(error)
@@ -40,9 +40,9 @@ class CartsController {
         }
     }
 
-    readById = async (req, res) => {
+    readById = async (req, res, next) => {
         try {
-            const { id } = req.query
+            const { id } = req.params
             const one = await this.service.readById(id)
             if (one) {
                 res.json201(one)
@@ -54,9 +54,9 @@ class CartsController {
         }
     }
 
-    updateById = async (req, res) => {
+    updateById = async (req, res, next) => {
         try {
-            const { id } = req.query
+            const { id } = req.params
             const data = req.body
             const one = await this.service.updateById(id, data)
             if (one) {
@@ -70,9 +70,9 @@ class CartsController {
         }
     }
 
-    destroyById = async (req, res) => {
+    destroyById = async (req, res, next) => {
         try {
-            const { id } = req.query
+            const { id } = req.params
             const one = await this.service.destroyById(id)
             if (one) {
                 res.json201(one)

@@ -74,7 +74,6 @@ class AuthController {
 
         const { password } = req.body        
         const { token } = req.signedCookies
-        console.log(token)
         const dataToken = verifyToken(token)
 
         let user = await this.service.readById(dataToken?._id)

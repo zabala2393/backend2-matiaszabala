@@ -19,7 +19,7 @@ class Authrouter extends Routerhelper {
         this.read("/google",["PUBLIC"], passportCb("google", { scope: ["email", "profile"] }))
         this.read("/google/redirect",["PUBLIC"], passportCb("google"), authController.loginCb)
         this.read("/verify/:email/:verifyCode", ["PUBLIC"], authController.verifyCb)
-        this.create("/resetpassword", ["PUBLIC", "USER"], authController.resetPasswordCb, resetPassword)
+        this.create("/resetpassword", ["PUBLIC"], authController.resetPasswordCb, resetPassword)
         this.create("/resetpassword/:emailCrypto", ["PUBLIC"], authController.newPasswordCb)
     }
 }

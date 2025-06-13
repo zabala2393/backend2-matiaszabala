@@ -1,6 +1,5 @@
 import usersController from "../../controllers/users.controller.js"
 import Routerhelper from "../../helpers/router.helper.js"
-import passportCb from "../../middlewares/passportCb.mid.js"
 
 class UsersRouter extends Routerhelper {
     constructor() {
@@ -10,11 +9,11 @@ class UsersRouter extends Routerhelper {
     }
 
     init = () => {
-        this.create('/', passportCb("ADMIN"), usersController.createOne)
-        this.read('/', passportCb("ADMIN"), usersController.readAll)
-        this.read("/:id",passportCb("ADMIN"), usersController.readById)
-        this.update("/:id",passportCb("USER"), usersController.updateById)
-        this.destroy("/id", passportCb("USER"), usersController.destroyByID)
+        this.create('/', ["PUBLIC"], usersController.createOne)
+        this.read('/', ["ADMIN"], usersController.readAll)
+        this.read("/:id",["ADMIN", "USER"], usersController.readById)
+        this.update("/:id",["USER"], usersController.updateById)
+        this.destroy("/id", ["USER", "ADMIN"], usersController.destroyByID)
     }
 }
 const usersRouter = new UsersRouter().getRouter()
