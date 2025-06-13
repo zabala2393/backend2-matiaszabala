@@ -1,10 +1,15 @@
-Primer entrega
+Entrega final
 
-Login y register testeados con JWToken y middlewares armados en clase
-(solo estoy teniendo problemas a la hora de gestionar las tareas limitadas mediante roles)
+Authrouter + routers de modelos implementados y testeados
 
-Armado de vistas home, login y register. Con redirecciones y vistas basicas (usando socket.io) de los productos existentes sin estilos
+Repositorios, servicios y controllers implementados
 
-Testeados con postman CRUD de usuarios y productos
+Correos para verificar cuenta y renovar contraseña funcionando
+
+Vistas home, login, recuperacion de contraseña, registro de usuarios, verificacion de cuenta implementadas
+
+Testeados con postman CRUD de usuarios, productos y carritos
 
 Implementado el router helper para reducir en varias lineas los routers correspondientes
+
+Base de datos implementada para trabajar con MongoDB (falta crear persistencia en memoria)
